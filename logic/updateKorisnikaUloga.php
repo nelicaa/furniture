@@ -1,0 +1,27 @@
+<?php
+ header("Content-type: application/json");
+ include $_SERVER['DOCUMENT_ROOT'].'/konekcija/konekcija.php';
+ include $_SERVER['DOCUMENT_ROOT']."logic/funkcije.php";
+
+
+ // za prikaz proizvoda u galeriji
+ if($_SERVER['REQUEST_METHOD']=='POST'){
+
+    try{
+        $idK=$_POST['id'];
+        $uloga=$_POST['uloga'];
+        $upit="UPDATE korisnik SET IdUloga=$uloga WHERE IdKorisnik=:id";
+        $rez=$konekcija->prepare($upit);
+        $rez->bindParam(":id",$idK);
+        $rez->execute();
+       echo json_encode($rez);
+        return $rez;
+      }
+    catch(PDOException $e){
+        echo $e->getMessage();
+        http_response_code(500);
+    }
+}
+ else{
+     http_response_code(404); }
+ ?>
